@@ -11,7 +11,7 @@ import static java.nio.file.StandardOpenOption.APPEND;
 
 public class Generator {
 
-    public void generateFixIntervalRecurringEvents(final int RPS, final int END_TIME) {
+    public void generateFixIntervalRecurringEvents(final int RPS, final int TIME_INTERVAL) {
         double timePerRequest = 1.0 / RPS;
         double timeInLog = 0;
 
@@ -23,7 +23,7 @@ public class Generator {
         }
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            while (timeInLog <= END_TIME) {
+            while (timeInLog <= TIME_INTERVAL) {
                 timeInLog += timePerRequest;
                 writer.append(0 + " " + String.format("%.5f", timeInLog) + "\n");
             }
@@ -88,10 +88,9 @@ public class Generator {
         }
     }
 
-    public void generateBinomial(int timeInterval) {
+    public void generateBinomial(final int TIME_INTERVAL) {
 
         int rps;
-        int timeSlot = timeInterval / 10;
         double timePerRequest;
         double timeInLog = 0;
 
@@ -106,9 +105,10 @@ public class Generator {
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (int i = 0; i <= 10; i++) {
-                rps = (int) (distribution.probability(i) * 1000000);
+                rps = (int) (distribution.probability(i) * 10000);
+                System.out.println("Generating " + rps + " rps");
                 timePerRequest = 1.0 / rps;
-                while (timeInLog <= (timeInterval / 11 * i)) {
+                while (timeInLog <= (TIME_INTERVAL / 11 * i)) {
                     timeInLog += timePerRequest;
                     writer.append(0 + " " + String.format("%.5f", timeInLog) + "\n");
                 }
