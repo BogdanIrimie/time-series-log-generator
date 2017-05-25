@@ -1,3 +1,6 @@
+import org.apache.commons.math3.distribution.AbstractIntegerDistribution;
+import org.apache.commons.math3.distribution.BinomialDistribution;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -79,6 +82,36 @@ public class Generator {
                     writer.append(0 + " " + String.format("%.5f", timeInLog) + "\n");
                 }
                 rps -= rps_decrement;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateBinomial(int timeInterval) {
+
+        int rps;
+        int timeSlot = timeInterval / 10;
+        double timePerRequest;
+        double timeInLog = 0;
+
+        Path path = Paths.get("generatedTraces/binomial.log");
+        try {
+            Files.createDirectories(path.getParent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        AbstractIntegerDistribution distribution = new BinomialDistribution(10, 0.5);
+
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (int i = 0; i <= 10; i++) {
+                rps = (int) (distribution.probability(i) * 1000000);
+                timePerRequest = 1.0 / rps;
+                while (timeInLog <= (timeInterval / 11 * i)) {
+                    timeInLog += timePerRequest;
+                    writer.append(0 + " " + String.format("%.5f", timeInLog) + "\n");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
