@@ -104,11 +104,11 @@ public class Generator {
         AbstractIntegerDistribution distribution = new BinomialDistribution(10, 0.5);
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (int i = 0; i <= 10; i++) {
-                rps = (int) (distribution.probability(i) * 10000);
+            for (int i = 1; i <= 11; i++) {
+                rps = (int) (distribution.probability(i - 1) * 10000);
                 System.out.println("Generating " + rps + " rps");
                 timePerRequest = 1.0 / rps;
-                while (timeInLog <= (TIME_INTERVAL / 11 * (i + 1))) {
+                while (timeInLog <= (TIME_INTERVAL / 11 * i)) {
                     timeInLog += timePerRequest;
                     writer.append(0 + " " + String.format("%.5f", timeInLog) + "\n");
                 }
