@@ -108,7 +108,7 @@ public class Generator {
                 rps = (int) (distribution.probability(i) * 10000);
                 System.out.println("Generating " + rps + " rps");
                 timePerRequest = 1.0 / rps;
-                while (timeInLog <= (TIME_INTERVAL / 11 * i)) {
+                while (timeInLog <= (TIME_INTERVAL / 11 * (i + 1))) {
                     timeInLog += timePerRequest;
                     writer.append(0 + " " + String.format("%.5f", timeInLog) + "\n");
                 }
